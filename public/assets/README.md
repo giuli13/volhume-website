@@ -1,12 +1,16 @@
 # Placeholder Assets
 
-Replace this file with the visual assets for the VolHuMe website.
+Replace the placeholder paths below with the visual assets for the VolHuMe website. Asset paths are centralized in
+`src/data/assets.ts`.
 
 Expected files:
 
-- `hero_video.mp4`
-- `overview_teaser.png`
-- `mesh_closeups.png`
-- `actors/actor_01.png` through `actors/actor_08.png`
-- `benchmark_view_synthesis.png`
-- `benchmark_4d.png`
+- `hero/hero_teaser.webp`
+- `hero/hero_capture_video.mp4`
+- `hero/hero_capture_poster.webp`
+- `paper/teaser_overview.webp`
+- `paper/mesh_closeups.webp`
+- `paper/comparison.webp`
+- `paper/benchmark_view.webp`
+- `paper/benchmark_4d.webp`
+- `subjects/subject_001.webp` through `subjects/subject_008.webp`

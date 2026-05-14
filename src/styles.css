@@ -77,6 +77,41 @@ video {
   opacity: 0;
 }
 
+[data-media-missing="true"]::after {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 2;
+  display: inline-flex;
+  max-width: calc(100% - 2rem);
+  padding: 0.48rem 0.72rem;
+  border: 1px solid rgba(29, 111, 232, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--muted);
+  content: attr(data-asset-label);
+  font-size: 0.82rem;
+  font-weight: 760;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+.hero-media[data-media-missing="true"]::before {
+  position: absolute;
+  top: 18%;
+  right: 8%;
+  z-index: 1;
+  padding: 0.48rem 0.72rem;
+  border: 1px solid rgba(29, 111, 232, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--soft);
+  content: attr(data-asset-label);
+  font-size: 0.78rem;
+  font-weight: 760;
+}
+
 button {
   font: inherit;
 }

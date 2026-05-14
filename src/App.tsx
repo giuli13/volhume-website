@@ -26,6 +26,7 @@ import {
   Wand2,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { assetPaths, assetUrl, subjectAssetPaths } from './data/assets';
 
 type Stat = {
   label: string;
@@ -44,7 +45,7 @@ type RevealProps = {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
 const navItems = [
   ['Overview', 'overview'],
@@ -112,19 +113,18 @@ const benchmarks: AssetCard[] = [
   {
     title: 'Novel-View Rendering',
     body: 'Multi-camera supervision for evaluating photorealistic synthesis under changing pose, garment, and expression.',
-    image: 'benchmark_view_synthesis.png',
+    image: assetPaths.paper.benchmarkView,
   },
   {
     title: '4D Human Reconstruction',
     body: 'Temporally coherent geometry sequences for measuring surface fidelity, stability, and detail preservation.',
-    image: 'benchmark_4d.png',
+    image: assetPaths.paper.benchmark4d,
   },
 ];
 
-const asset = (path: string) => `${import.meta.env.BASE_URL}assets/${path}`;
-
 const hideMissingMedia = (event: React.SyntheticEvent<HTMLImageElement | HTMLVideoElement>) => {
   event.currentTarget.classList.add('media-missing');
+  event.currentTarget.parentElement?.setAttribute('data-media-missing', 'true');
 };
 
 function useReveal() {
@@ -147,9 +147,9 @@ function useReveal() {
   }, []);
 }
 
-function Reveal({ children, className = '', delay = 0 }: RevealProps) {
+function Reveal({ children, className = '', delay = 0, style, ...attributes }: RevealProps) {
   return (
-    <div className={className} data-reveal style={{ transitionDelay: `${delay}ms` }}>
+    <div {...attributes} className={className} data-reveal style={{ ...style, transitionDelay: `${delay}ms` }}>
       {children}
     </div>
   );
@@ -228,14 +228,14 @@ function Header() {
 function Hero() {
   return (
     <section className="hero section-band" id="top">
-      <div className="hero-media" aria-hidden="true">
+      <div className="hero-media" data-asset-label="Hero capture video" aria-hidden="true">
         <video
-          src={asset('hero_video.mp4')}
+          src={assetUrl(assetPaths.hero.heroVideo)}
           autoPlay
           muted
           loop
           playsInline
-          poster={asset('overview_teaser.png')}
+          poster={assetUrl(assetPaths.hero.heroPoster)}
           onError={hideMissingMedia}
         />
         <div className="hero-fallback" />
@@ -317,8 +317,12 @@ function Overview() {
         </Reveal>
       </div>
       <div className="overview-layout">
-        <Reveal className="image-frame">
-          <img src={asset('overview_teaser.png')} alt="VolHuMe overview teaser placeholder" onError={hideMissingMedia} />
+        <Reveal className="image-frame" data-asset-label="Overview teaser">
+          <img
+            src={assetUrl(assetPaths.paper.overviewTeaser)}
+            alt="VolHuMe overview teaser placeholder"
+            onError={hideMissingMedia}
+          />
         </Reveal>
         <Reveal className="overview-copy" delay={120}>
           <p>
@@ -401,8 +405,8 @@ function DatasetContents() {
         </Reveal>
       </div>
       <div className="contents-layout">
-        <Reveal className="image-frame tall">
-          <img src={asset('mesh_closeups.png')} alt="Mesh closeups placeholder" onError={hideMissingMedia} />
+        <Reveal className="image-frame tall" data-asset-label="Mesh closeups">
+          <img src={assetUrl(assetPaths.paper.meshCloseups)} alt="Mesh closeups placeholder" onError={hideMissingMedia} />
         </Reveal>
         <div className="content-grid">
           {contents.map((item, index) => {
@@ -426,7 +430,7 @@ function ActorGallery() {
     () =>
       Array.from({ length: 8 }, (_, index) => ({
         id: String(index + 1).padStart(2, '0'),
-        image: `actors/actor_${String(index + 1).padStart(2, '0')}.png`,
+        image: subjectAssetPaths[index] ?? subjectAssetPaths[0],
         tag: actorTags[index],
       })),
     [],
@@ -448,9 +452,9 @@ function ActorGallery() {
       </div>
       <div className="actor-grid">
         {actors.map((actor, index) => (
-          <Reveal className="actor-card" key={actor.id} delay={index * 45}>
+          <Reveal className="actor-card" data-asset-label={`Subject ${actor.id}`} key={actor.id} delay={index * 45}>
             <img
-              src={asset(actor.image)}
+              src={assetUrl(actor.image)}
               alt={`VolHuMe actor ${actor.id} placeholder`}
               onError={hideMissingMedia}
             />
@@ -525,8 +529,13 @@ function Benchmarks() {
       </div>
       <div className="benchmark-grid">
         {benchmarks.map((benchmark, index) => (
-          <Reveal className="benchmark-card interactive-card" key={benchmark.title} delay={index * 100}>
-            <img src={asset(benchmark.image)} alt={`${benchmark.title} placeholder`} onError={hideMissingMedia} />
+          <Reveal
+            className="benchmark-card interactive-card"
+            data-asset-label={benchmark.title}
+            key={benchmark.title}
+            delay={index * 100}
+          >
+            <img src={assetUrl(benchmark.image)} alt={`${benchmark.title} placeholder`} onError={hideMissingMedia} />
             <div>
               <h3>{benchmark.title}</h3>
               <p>{benchmark.body}</p>
