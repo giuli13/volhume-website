@@ -13,6 +13,7 @@
   --accent: #1d6fe8;
   --accent-2: #00aeef;
   --accent-3: #f97316;
+  --brand-gradient: linear-gradient(92deg, var(--ink) 0 28%, var(--accent) 38%, var(--accent-2) 52%, var(--accent-3) 66%, var(--ink) 77%);
   --shadow: 0 24px 70px rgba(16, 32, 51, 0.08);
   --shadow-soft: 0 12px 34px rgba(16, 32, 51, 0.07);
   font-family:
@@ -369,7 +370,8 @@ p {
 h1 {
   max-width: 10ch;
   margin-bottom: 0.8rem;
-  background: linear-gradient(92deg, var(--ink) 0 28%, var(--accent) 38%, var(--accent-2) 52%, var(--accent-3) 66%, var(--ink) 77%);
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   font-size: clamp(4.2rem, 13vw, 9.4rem);
@@ -379,7 +381,8 @@ h1 {
 
 .brand-name {
   display: inline-block;
-  background: linear-gradient(92deg, var(--ink) 0 28%, var(--accent) 38%, var(--accent-2) 52%, var(--accent-3) 66%, var(--ink) 77%);
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
   background-clip: text;
   color: var(--accent);
   font-weight: 820;

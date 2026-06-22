@@ -150,7 +150,7 @@ function BrandName() {
   return <span className="brand-name">VolHuMe</span>;
 }
 
-function BrandText({ text }: { text: string }) {
+function renderWithBrandName(text: string) {
   return (
     <>
       {text.split('VolHuMe').map((part, index, parts) => (
@@ -161,6 +161,10 @@ function BrandText({ text }: { text: string }) {
       ))}
     </>
   );
+}
+
+function BrandText({ text }: { text: string }) {
+  return <>{renderWithBrandName(text)}</>;
 }
 
 function Reveal({ children, className = '', delay = 0, style, ...attributes }: RevealProps) {
@@ -603,7 +607,7 @@ function HighlightText({ fallback, image }: HighlightTextProps) {
   if (image.captionStrong && image.captionStrongPosition === 'before') {
     return (
       <>
-        <strong>{image.captionStrong}</strong>
+        <strong>{renderWithBrandName(image.captionStrong)}</strong>
         <br />
         <BrandText text={image.caption ?? fallback} />
       </>
@@ -613,7 +617,7 @@ function HighlightText({ fallback, image }: HighlightTextProps) {
   if (image.captionStrong) {
     return (
       <>
-        <BrandText text={image.caption ?? fallback} /> <strong>{image.captionStrong}</strong>
+        <BrandText text={image.caption ?? fallback} /> <strong>{renderWithBrandName(image.captionStrong)}</strong>
       </>
     );
   }
