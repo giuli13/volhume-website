@@ -56,7 +56,7 @@ This repository includes a GitHub Actions workflow at `.github/workflows/deploy.
 1. Push the project to GitHub.
 2. In the repository settings, go to **Pages**.
 3. Set **Source** to **GitHub Actions**.
-4. Push to the `main` branch.
+4. If needed, run the **Deploy to GitHub Pages** workflow manually from the Actions tab (`workflow_dispatch`).
 
 The workflow installs dependencies, builds the Vite site, and publishes `dist/` to GitHub Pages.
 
