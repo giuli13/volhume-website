@@ -260,8 +260,13 @@ function Hero() {
     const updateMotionPreference = () => setReduceHeroMotion(motionQuery.matches);
 
     updateMotionPreference();
-    motionQuery.addEventListener('change', updateMotionPreference);
-    return () => motionQuery.removeEventListener('change', updateMotionPreference);
+    if ('addEventListener' in motionQuery) {
+      motionQuery.addEventListener('change', updateMotionPreference);
+      return () => motionQuery.removeEventListener('change', updateMotionPreference);
+    }
+
+    motionQuery.addListener(updateMotionPreference);
+    return () => motionQuery.removeListener(updateMotionPreference);
   }, []);
 
   return (

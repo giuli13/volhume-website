@@ -216,8 +216,13 @@ export function GLBSequenceViewer({
       renderScene();
     };
 
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(container);
+    let resizeObserver: ResizeObserver | null = null;
+    if ('ResizeObserver' in window) {
+      resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(container);
+    } else {
+      window.addEventListener('resize', resize);
+    }
     resize();
 
     const animate = () => {
@@ -231,7 +236,11 @@ export function GLBSequenceViewer({
       window.cancelAnimationFrame(frameRef.current);
       controls.removeEventListener('change', renderScene);
       controls.dispose();
-      resizeObserver.disconnect();
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      } else {
+        window.removeEventListener('resize', resize);
+      }
       if (loadedSceneRef.current) {
         clearWireframes();
         scene.remove(loadedSceneRef.current);

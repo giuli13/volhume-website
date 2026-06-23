@@ -398,8 +398,13 @@ export function RiggedModelViewer({ src, animationSrc, className = '' }: RiggedM
       renderScene();
     };
 
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(container);
+    let resizeObserver: ResizeObserver | null = null;
+    if ('ResizeObserver' in window) {
+      resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(container);
+    } else {
+      window.addEventListener('resize', resize);
+    }
     resize();
 
     const frameModel = (model: any) => {
@@ -501,7 +506,11 @@ export function RiggedModelViewer({ src, animationSrc, className = '' }: RiggedM
       controls.removeEventListener('end', handleControlsEnd);
       clearAnimation();
       controls.dispose();
-      resizeObserver.disconnect();
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      } else {
+        window.removeEventListener('resize', resize);
+      }
       clearSkeletonHelpers(scene);
       disposeFloor();
       if (loadedSceneRef.current) {
