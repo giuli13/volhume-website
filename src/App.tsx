@@ -1,6 +1,5 @@
 import {
   Check,
-  ChevronRight,
   Download,
   FileText,
   Github,
@@ -45,6 +44,7 @@ const navItems = [
 ] as const;
 
 const contactEmail = 'giulia.martinelli-2@unitn.it';
+const paperUrl = 'http://arxiv.org/abs/2606.23062';
 
 const teamMembers = [
   {
@@ -64,7 +64,7 @@ const teamMembers = [
   },
   {
     name: 'Esa Rahtu',
-    url: 'https://researchportal.tuni.fi/en/persons/esa-rahtu',
+    url: 'https://esa.rahtu.fi/',
     image: '/assets/team/EsaRahtu.jpg',
   },
   {
@@ -304,7 +304,7 @@ function Hero() {
               <Download size={18} />
               Request access
             </a>
-            <a className="button secondary coming-soon" href="#" title="Coming soon" aria-label="Paper, coming soon">
+            <a className="button secondary" href={paperUrl} target="_blank" rel="noopener noreferrer">
               <FileText size={18} />
               Paper
             </a>
@@ -670,6 +670,26 @@ function HighlightMedia({ alt, enableHoverPreview = false, fallbackLabel, source
 }
 
 function Benchmarks() {
+  const [selectedBenchmark, setSelectedBenchmark] = useState<{
+    benchmark: AssetCard;
+    imageIndex: number;
+  } | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!selectedBenchmark) return undefined;
+
+    closeButtonRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedBenchmark(null);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selectedBenchmark]);
+
   return (
     <section className="section benchmarks" id="benchmarks">
       <div className="section-heading">
@@ -680,9 +700,88 @@ function Benchmarks() {
       </div>
       <div className="benchmark-grid">
         {benchmarks.map((benchmark, index) => (
-          <BenchmarkCard benchmark={benchmark} index={index} key={benchmark.title} />
+          <BenchmarkCard
+            benchmark={benchmark}
+            index={index}
+            key={benchmark.title}
+            onOpen={(imageIndex) => setSelectedBenchmark({ benchmark, imageIndex })}
+          />
         ))}
       </div>
+      {selectedBenchmark ? (
+        <div
+          className="highlight-lightbox-backdrop"
+          role="presentation"
+          onClick={() => setSelectedBenchmark(null)}
+        >
+          <div
+            className="highlight-lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="benchmark-lightbox-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              ref={closeButtonRef}
+              className="highlight-lightbox-close"
+              type="button"
+              onClick={() => setSelectedBenchmark(null)}
+              aria-label="Close benchmark preview"
+            >
+              Close
+            </button>
+            <div>
+              <span className="kicker">Evaluation Track</span>
+              <h3 id="benchmark-lightbox-title">{selectedBenchmark.benchmark.title}</h3>
+            </div>
+            <div className="highlight-lightbox-image" data-asset-label={selectedBenchmark.benchmark.title}>
+              <HighlightMedia
+                alt={selectedBenchmark.benchmark.images[selectedBenchmark.imageIndex]?.alt ?? selectedBenchmark.benchmark.title}
+                fallbackLabel={selectedBenchmark.benchmark.title}
+                source={selectedBenchmark.benchmark.images[selectedBenchmark.imageIndex]?.src}
+              />
+              {selectedBenchmark.benchmark.images.length > 1 ? (
+                <>
+                  <button
+                    className="highlight-arrow highlight-arrow-prev"
+                    type="button"
+                    onClick={() => {
+                      setSelectedBenchmark((current) => {
+                        if (!current) return current;
+                        const total = current.benchmark.images.length;
+                        return { ...current, imageIndex: (current.imageIndex - 1 + total) % total };
+                      });
+                    }}
+                    aria-label="Previous image"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    className="highlight-arrow highlight-arrow-next"
+                    type="button"
+                    onClick={() => {
+                      setSelectedBenchmark((current) => {
+                        if (!current) return current;
+                        const total = current.benchmark.images.length;
+                        return { ...current, imageIndex: (current.imageIndex + 1) % total };
+                      });
+                    }}
+                    aria-label="Next image"
+                  >
+                    ›
+                  </button>
+                  <span className="highlight-counter">
+                    {selectedBenchmark.imageIndex + 1} / {selectedBenchmark.benchmark.images.length}
+                  </span>
+                </>
+              ) : null}
+            </div>
+            <p className="highlight-caption highlight-lightbox-caption">
+              <BrandText text={selectedBenchmark.benchmark.body} />
+            </p>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -690,9 +789,10 @@ function Benchmarks() {
 type BenchmarkCardProps = {
   benchmark: AssetCard;
   index: number;
+  onOpen: (imageIndex: number) => void;
 };
 
-function BenchmarkCard({ benchmark, index }: BenchmarkCardProps) {
+function BenchmarkCard({ benchmark, index, onOpen }: BenchmarkCardProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const currentImage = benchmark.images[imageIndex];
   const total = benchmark.images.length;
@@ -713,13 +813,20 @@ function BenchmarkCard({ benchmark, index }: BenchmarkCardProps) {
     >
       <div className="benchmark-media">
         {currentImage ? (
-          <img
-            src={assetUrl(currentImage.src)}
-            alt={currentImage.alt}
-            loading="lazy"
-            decoding="async"
-            onError={hideMissingMedia}
-          />
+          <button
+            className="highlight-image-button benchmark-image-button"
+            type="button"
+            data-asset-label={benchmark.title}
+            onClick={() => onOpen(imageIndex)}
+            aria-label="Open larger benchmark view"
+          >
+            <HighlightMedia
+              alt={currentImage.alt}
+              enableHoverPreview
+              fallbackLabel={benchmark.title}
+              source={currentImage.src}
+            />
+          </button>
         ) : (
           <span className="highlight-placeholder">{benchmark.title}</span>
         )}
@@ -740,10 +847,6 @@ function BenchmarkCard({ benchmark, index }: BenchmarkCardProps) {
       <div>
         <h3>{benchmark.title}</h3>
         <p><BrandText text={benchmark.body} /></p>
-        <a href="#access">
-          View protocol
-          <ChevronRight size={16} />
-        </a>
       </div>
     </Reveal>
   );
@@ -772,12 +875,24 @@ function Access() {
 }
 
 function Citation() {
+  const [copied, setCopied] = useState(false);
   const citation = `@dataset{volhume2026,
   title  = {VolHuMe: A High-Resolution Large Scale Dataset of Volumetric Human Meshes},
-  author = {VolHuMe Team},
-  year   = {2026},
-  note   = {Dataset website}
+  author={Martinelli, Giulia, and Bisagno, Niccol{\\\`o} and Garau, Nicola and Rahtu, Esa and Conci, Nicola},
+  booktitle={2026 IEEE International Conference on Image Processing (ICIP)},
+  year={2026},
+  organization={IEEE}
 }`;
+
+  const copyCitation = async () => {
+    try {
+      await navigator.clipboard.writeText(citation);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   return (
     <section className="section citation" id="citation">
@@ -785,13 +900,16 @@ function Citation() {
         <Reveal>
           <span className="kicker">Citation</span>
           <h2 className="split-title">
-            <span>Cite <BrandName /></span>
+            <span className="citation-title-line">Cite <BrandName /></span>
             <span>in your research.</span>
           </h2>
         </Reveal>
       </div>
       <Reveal className="citation-box">
         <FileText size={22} />
+        <button className="citation-copy" type="button" onClick={copyCitation}>
+          {copied ? 'Copied' : 'Copy BibTeX'}
+        </button>
         <pre>
           <code>{citation}</code>
         </pre>
@@ -801,6 +919,7 @@ function Citation() {
 }
 
 type TeamMember = (typeof teamMembers)[number];
+const teamRows = [teamMembers.slice(0, 3), teamMembers.slice(3)] as const;
 
 function TeamMemberCard({ member }: { member: TeamMember }) {
   const [imageMissing, setImageMissing] = useState(false);
@@ -840,8 +959,12 @@ function TeamContact() {
         <span className="kicker">Team / Contact</span>
         <h2>The <BrandName /> Team</h2>
         <div className="team-grid">
-          {teamMembers.map((member) => (
-            <TeamMemberCard member={member} key={member.name} />
+          {teamRows.map((row, index) => (
+            <div className="team-row" key={`team-row-${index}`}>
+              {row.map((member) => (
+                <TeamMemberCard member={member} key={member.name} />
+              ))}
+            </div>
           ))}
         </div>
         <a className="back-to-top button secondary" href="#top" aria-label="Back to top">

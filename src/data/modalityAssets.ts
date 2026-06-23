@@ -71,11 +71,11 @@ const actor01 = {
     '/assets/dataset_viewer/actor_01/point_cloud/7b51f75_merged_01200.glb',
   ],
   smplx: [
-    '/assets/dataset_viewer/actor_01/smplx/Frame000044.glb',
-    '/assets/dataset_viewer/actor_01/smplx/Frame000230.glb',
-    '/assets/dataset_viewer/actor_01/smplx/Frame000412.glb',
-    '/assets/dataset_viewer/actor_01/smplx/Frame000522.glb',
-    '/assets/dataset_viewer/actor_01/smplx/Frame000600.glb',
+    '/assets/dataset_viewer/actor_01/smplx/Frame00044.glb',
+    '/assets/dataset_viewer/actor_01/smplx/Frame00230.glb',
+    '/assets/dataset_viewer/actor_01/smplx/Frame00412.glb',
+    '/assets/dataset_viewer/actor_01/smplx/Frame00522.glb',
+    '/assets/dataset_viewer/actor_01/smplx/Frame00600.glb',
   ],
 } as const;
 

@@ -22,20 +22,44 @@ export function ModalityViewer() {
 
   return (
     <div className="modality-viewer actorshq-modality-viewer">
-      <div className="actor-tabs" role="tablist" aria-label="Dataset actor selector">
-        {actorEntries.map((actor) => (
-          <button
-            className={actor.id === selectedActor.id ? 'is-active' : ''}
-            type="button"
-            key={actor.id}
-            onClick={() => setSelectedActorId(actor.id)}
-            role="tab"
-            aria-selected={actor.id === selectedActor.id}
-            aria-pressed={actor.id === selectedActor.id}
-          >
-            {actor.label}
-          </button>
-        ))}
+      <div className="dataset-viewer-controls">
+        <div className="viewer-control-group">
+          <span>Choose Actor</span>
+          <div className="actor-tabs" role="tablist" aria-label="Dataset actor selector">
+            {actorEntries.map((actor) => (
+              <button
+                className={actor.id === selectedActor.id ? 'is-active' : ''}
+                type="button"
+                key={actor.id}
+                onClick={() => setSelectedActorId(actor.id)}
+                role="tab"
+                aria-selected={actor.id === selectedActor.id}
+                aria-pressed={actor.id === selectedActor.id}
+              >
+                {actor.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="viewer-control-group viewer-control-group-wide">
+          <span>Choose Ground Truth</span>
+          <div className="modality-tabs" role="tablist" aria-label="Dataset modality selector">
+            {modalityEntries.map((modality) => (
+              <button
+                className={modality.id === selectedDefinition.id ? 'is-active' : ''}
+                type="button"
+                key={modality.id}
+                onClick={() => setSelectedId(modality.id)}
+                role="tab"
+                aria-selected={modality.id === selectedDefinition.id}
+                aria-pressed={modality.id === selectedDefinition.id}
+              >
+                {modality.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="modality-preview actorshq-stage">
@@ -77,22 +101,6 @@ export function ModalityViewer() {
             }))}
           />
         ) : null}
-      </div>
-
-      <div className="modality-tabs" role="tablist" aria-label="Dataset modality selector">
-        {modalityEntries.map((modality) => (
-          <button
-            className={modality.id === selectedDefinition.id ? 'is-active' : ''}
-            type="button"
-            key={modality.id}
-            onClick={() => setSelectedId(modality.id)}
-            role="tab"
-            aria-selected={modality.id === selectedDefinition.id}
-            aria-pressed={modality.id === selectedDefinition.id}
-          >
-            {modality.label}
-          </button>
-        ))}
       </div>
     </div>
   );
