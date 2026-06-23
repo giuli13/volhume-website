@@ -467,10 +467,11 @@ export function RiggedModelViewer({ src, animationSrc, className = '' }: RiggedM
           const mixer = new THREE.AnimationMixer(model);
           const clip = gltf.animations[0];
           const action = mixer.clipAction(clip);
+          const shouldAutoPlay = mode === 'animation';
           action.setLoop(THREE.LoopRepeat, Infinity);
           action.clampWhenFinished = false;
           action.play();
-          action.paused = true;
+          action.paused = !shouldAutoPlay;
           mixerRef.current = mixer;
           actionRef.current = action;
           durationRef.current = clip.duration;
@@ -478,6 +479,7 @@ export function RiggedModelViewer({ src, animationSrc, className = '' }: RiggedM
           setDuration(clip.duration);
           setCurrentTime(0);
           setHasAnimation(true);
+          setIsPlaying(shouldAutoPlay);
         }
 
         setStatus('ready');

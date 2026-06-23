@@ -16,6 +16,7 @@ type GLBSequenceViewerProps = {
   title?: string;
   materialColor?: string;
   modelRotationX?: number;
+  modelRotationZ?: number;
   showWireframeControl?: boolean;
   className?: string;
 };
@@ -48,6 +49,7 @@ export function GLBSequenceViewer({
   title = 'Frame Sequence',
   materialColor,
   modelRotationX = 0,
+  modelRotationZ = 0,
   showWireframeControl = true,
   className = '',
 }: GLBSequenceViewerProps) {
@@ -288,9 +290,10 @@ export function GLBSequenceViewer({
     }
 
     const frameModel = (model: any) => {
-      if (modelRotationX) {
-        // VolHuMe point cloud frames are stored with a different up-axis; rotate for web viewer display.
+      if (modelRotationX || modelRotationZ) {
+        // VolHuMe point cloud frames are stored with a different up-axis; rotate before framing.
         model.rotation.x = modelRotationX;
+        model.rotation.z = modelRotationZ;
         model.updateMatrixWorld(true);
       }
 

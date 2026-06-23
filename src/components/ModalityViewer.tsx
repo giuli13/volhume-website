@@ -71,7 +71,7 @@ export function ModalityViewer() {
               key={viewerKey}
               frames={selected.frames.map(assetUrl)}
               materialColor={selectedDefinition.id === 'smplx' ? '#69727e' : undefined}
-              modelRotationX={selectedDefinition.id === 'pointCloud' ? -Math.PI / 2 : 0}
+              modelRotationZ={selectedDefinition.id === 'pointCloud' ? -Math.PI / 2 : 0}
               showWireframeControl={selectedDefinition.id !== 'pointCloud'}
               className="modality-sequence-viewer"
             />
