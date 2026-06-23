@@ -269,12 +269,13 @@ function Hero() {
       return () => motionQuery.removeEventListener('change', updateMotionPreference);
     }
 
-    if (
-      typeof legacyMotionQuery.addListener === 'function'
-      && typeof legacyMotionQuery.removeListener === 'function'
-    ) {
+    if (typeof legacyMotionQuery.addListener === 'function') {
       legacyMotionQuery.addListener(updateMotionPreference);
-      return () => legacyMotionQuery.removeListener(updateMotionPreference);
+      return () => {
+        if (typeof legacyMotionQuery.removeListener === 'function') {
+          legacyMotionQuery.removeListener(updateMotionPreference);
+        }
+      };
     }
 
     return undefined;

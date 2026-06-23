@@ -234,7 +234,7 @@ export function GLBSequenceViewer({
         fallbackWidth = nextWidth;
         fallbackHeight = nextHeight;
         resize();
-      }, 250);
+      }, 500);
     }
     resize();
 

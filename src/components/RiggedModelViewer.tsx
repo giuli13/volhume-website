@@ -416,7 +416,7 @@ export function RiggedModelViewer({ src, animationSrc, className = '' }: RiggedM
         fallbackWidth = nextWidth;
         fallbackHeight = nextHeight;
         resize();
-      }, 250);
+      }, 500);
     }
     resize();
 
