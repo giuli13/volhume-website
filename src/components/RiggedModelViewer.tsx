@@ -399,9 +399,8 @@ export function RiggedModelViewer({ src, animationSrc, className = '' }: RiggedM
     };
 
     let resizeObserver: ResizeObserver | null = null;
-    const ResizeObserverCtor = window.ResizeObserver;
-    if (typeof ResizeObserverCtor === 'function') {
-      resizeObserver = new ResizeObserverCtor(resize);
+    if (typeof window.ResizeObserver === 'function') {
+      resizeObserver = new window.ResizeObserver(resize);
       resizeObserver.observe(container);
     } else {
       window.addEventListener('resize', resize);
