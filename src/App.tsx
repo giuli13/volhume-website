@@ -257,16 +257,20 @@ function Hero() {
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const legacyMotionQuery = motionQuery as MediaQueryList & {
+      addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
+      removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
+    };
     const updateMotionPreference = () => setReduceHeroMotion(motionQuery.matches);
 
     updateMotionPreference();
-    if ('addEventListener' in motionQuery) {
+    if (typeof motionQuery.addEventListener === 'function') {
       motionQuery.addEventListener('change', updateMotionPreference);
       return () => motionQuery.removeEventListener('change', updateMotionPreference);
     }
 
-    motionQuery.addListener(updateMotionPreference);
-    return () => motionQuery.removeListener(updateMotionPreference);
+    legacyMotionQuery.addListener?.(updateMotionPreference);
+    return () => legacyMotionQuery.removeListener?.(updateMotionPreference);
   }, []);
 
   return (

@@ -217,8 +217,9 @@ export function GLBSequenceViewer({
     };
 
     let resizeObserver: ResizeObserver | null = null;
-    if ('ResizeObserver' in window) {
-      resizeObserver = new ResizeObserver(resize);
+    const ResizeObserverCtor = window.ResizeObserver;
+    if (typeof ResizeObserverCtor === 'function') {
+      resizeObserver = new ResizeObserverCtor(resize);
       resizeObserver.observe(container);
     } else {
       window.addEventListener('resize', resize);
