@@ -217,11 +217,24 @@ export function GLBSequenceViewer({
     };
 
     let resizeObserver: ResizeObserver | null = null;
+    let resizeFallbackTimer: number | null = null;
+    let fallbackWidth = 0;
+    let fallbackHeight = 0;
     if (typeof window.ResizeObserver === 'function') {
       resizeObserver = new window.ResizeObserver(resize);
       resizeObserver.observe(container);
     } else {
       window.addEventListener('resize', resize);
+      fallbackWidth = container.clientWidth;
+      fallbackHeight = container.clientHeight;
+      resizeFallbackTimer = window.setInterval(() => {
+        const nextWidth = container.clientWidth;
+        const nextHeight = container.clientHeight;
+        if (nextWidth === fallbackWidth && nextHeight === fallbackHeight) return;
+        fallbackWidth = nextWidth;
+        fallbackHeight = nextHeight;
+        resize();
+      }, 250);
     }
     resize();
 
@@ -240,6 +253,9 @@ export function GLBSequenceViewer({
         resizeObserver.disconnect();
       } else {
         window.removeEventListener('resize', resize);
+        if (resizeFallbackTimer !== null) {
+          window.clearInterval(resizeFallbackTimer);
+        }
       }
       if (loadedSceneRef.current) {
         clearWireframes();

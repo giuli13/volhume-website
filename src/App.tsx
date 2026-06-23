@@ -269,8 +269,15 @@ function Hero() {
       return () => motionQuery.removeEventListener('change', updateMotionPreference);
     }
 
-    legacyMotionQuery.addListener?.(updateMotionPreference);
-    return () => legacyMotionQuery.removeListener?.(updateMotionPreference);
+    if (
+      typeof legacyMotionQuery.addListener === 'function'
+      && typeof legacyMotionQuery.removeListener === 'function'
+    ) {
+      legacyMotionQuery.addListener(updateMotionPreference);
+      return () => legacyMotionQuery.removeListener(updateMotionPreference);
+    }
+
+    return undefined;
   }, []);
 
   return (
