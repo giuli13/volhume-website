@@ -394,6 +394,7 @@ function News() {
             <span>
               <BrandName /> is now available on{' '}
               <a href={datasetUrl} target="_blank" rel="noopener noreferrer">Hugging Face</a>.
+              {' '}Point clouds, meshes, depth maps, and camera parameters are available now. SMPL-X fittings are in progress.
             </span>
           </li>
         </ul>
