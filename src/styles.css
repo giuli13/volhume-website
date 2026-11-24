@@ -603,6 +603,48 @@ p {
   line-height: 1.48;
 }
 
+.news {
+  padding-block: 0;
+}
+
+.news-update {
+  padding-block: 1.25rem;
+  border-block: 1px solid var(--line);
+}
+
+.news-update h2 {
+  margin: 0 0 0.85rem;
+  font-size: 1.5rem;
+}
+
+.news-update ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.news-update li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--accent-2);
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.news-update time {
+  color: var(--ink);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.news-update a {
+  color: #175bbd;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
 .section-heading {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.7fr);

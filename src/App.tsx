@@ -45,6 +45,7 @@ const navItems = [
 
 const contactEmail = 'giulia.martinelli-2@unitn.it';
 const paperUrl = 'http://arxiv.org/abs/2606.23062';
+const datasetUrl = 'https://huggingface.co/datasets/ylenol/VolHuMe';
 
 const teamMembers = [
   {
@@ -300,9 +301,9 @@ function Hero() {
           <h1><BrandName /></h1>
           <p className="hero-title">A High-Resolution Large Scale Dataset of Volumetric Human Meshes</p>
           <div className="hero-actions">
-            <a className="button primary" href="#access">
+            <a className="button primary" href={datasetUrl} target="_blank" rel="noopener noreferrer">
               <Download size={18} />
-              Request access
+              Download dataset
             </a>
             <a className="button secondary" href={paperUrl} target="_blank" rel="noopener noreferrer">
               <FileText size={18} />
@@ -378,6 +379,25 @@ function Overview() {
           />
         </Reveal>
       </div>
+    </section>
+  );
+}
+
+function News() {
+  return (
+    <section className="section news" id="news" aria-labelledby="news-heading">
+      <Reveal className="news-update">
+        <h2 id="news-heading">News</h2>
+        <ul>
+          <li>
+            <time dateTime="2026-11-24">Nov 24, 2026</time>
+            <span>
+              <BrandName /> is now available on{' '}
+              <a href={datasetUrl} target="_blank" rel="noopener noreferrer">Hugging Face</a>.
+            </span>
+          </li>
+        </ul>
+      </Reveal>
     </section>
   );
 }
@@ -858,13 +878,17 @@ function Access() {
       <Reveal className="access-panel">
         <div>
           <span className="kicker">Access / Download</span>
-          <h2 className="split-title">
-            <span>Dataset access</span>
-            <span>coming soon.</span>
+          <h2>
+            Download<br />
+            <BrandName />
           </h2>
         </div>
         <div className="access-actions">
-          <a className="button primary" href={`mailto:${contactEmail}`}>
+          <a className="button primary" href={datasetUrl} target="_blank" rel="noopener noreferrer">
+            <Download size={18} />
+            Download on Hugging Face
+          </a>
+          <a className="button secondary" href={`mailto:${contactEmail}`}>
             <Mail size={18} />
             Contact authors
           </a>
@@ -985,6 +1009,7 @@ export function App() {
         <Hero />
         <StatsSection />
         <Overview />
+        <News />
         <DatasetContents />
         <DatasetHighlights />
         <Benchmarks />
